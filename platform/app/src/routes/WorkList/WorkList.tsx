@@ -11,6 +11,8 @@ import filtersMeta from './filtersMeta.js';
 import { useAppConfig } from '@state';
 import { useDebounce, useSearchParams } from '@hooks';
 import { utils, hotkeys, ServicesManager } from '@ohif/core';
+import Header from 'extension-neuralsight-tools/src/components/Header';
+import NeuralSightViewportUploadModal from 'extension-neuralsight-tools/src/modals/NeuralSightViewportUploadModal';
 
 import {
   Icon,
@@ -21,10 +23,12 @@ import {
   StudyListPagination,
   StudyListFilter,
   TooltipClipboard,
-  Header,
+  // Header,
   useModal,
   AboutModal,
   UserPreferences,
+  Button,
+  ButtonEnums,
   LoadingIndicatorProgress,
 } from '@ohif/ui';
 
@@ -442,7 +446,14 @@ function WorkList({
     });
   }
 
-  const { customizationService } = servicesManager.services;
+  const {
+    customizationService,
+    uiModalService,
+    cornerstoneViewportService,
+  } = servicesManager.services;
+
+  // console.log('activeViewportIndex', activeViewportIndex);
+
   const { component: dicomUploadComponent } =
     customizationService.get('dicomUploadComponent') ?? {};
   const uploadProps =
@@ -475,6 +486,39 @@ function WorkList({
         isSticky
         menuOptions={menuOptions}
         isReturnEnabled={false}
+        rightSideItems={
+          <>
+            <Button
+              type={ButtonEnums.type.primary}
+              size={ButtonEnums.size.medium}
+              className="mr-3 px-2"
+              onClick={() => {
+                show({
+                  content: NeuralSightViewportUploadModal,
+                  title: t('Upload Image for AI probing'),
+                  contentProps: {
+                    activeViewportIndex: undefined, //TOFIX: need when loading image
+                    onClose: uiModalService.hide, //TODO alternative use hide and show from useModal still valid
+                    cornerstoneViewportService, //TOFIX: remove if no longer need Probably this one too
+                  },
+                });
+              }}
+            >
+              <span className="mr-1">AI Predict</span>
+              <Icon name="tool-ai-probe" className="h-5 w-5" />
+            </Button>
+            {/*TODO: Move logout functionality to be added*/}
+            <Button
+              type={ButtonEnums.type.secondary}
+              size={ButtonEnums.size.medium}
+              className="mr-3 px-2"
+              onClick={() => console.log('this will logout the current user')}
+            >
+              <span className="mr-1">Logout</span>
+              <Icon name="power-off" className="h-5 w-5" />
+            </Button>
+          </>
+        }
         WhiteLabeling={appConfig.whiteLabeling}
       />
       <div className="overflow-y-auto ohif-scrollbar flex flex-col grow">

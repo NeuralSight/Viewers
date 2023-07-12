@@ -1,17 +1,17 @@
 import React, { ReactNode } from 'react';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { NavBar, Svg, Icon, IconButton, Dropdown } from '@ohif/ui';
 import { AnyObject, MenuOptionType } from '../../../data';
 
-type PropTypes = {
-  children: ReactNode | VoidFunction;
+type PropType = {
+  children: ReactNode;
   menuOptions: MenuOptionType[];
   isReturnEnabled: boolean;
-  onClickReturnButton: () => any;
+  onClickReturnButton: () => void;
   WhiteLabeling: AnyObject;
   isSticky: boolean;
+  rightSideItems: ReactNode;
 };
 
 function Header({
@@ -21,8 +21,9 @@ function Header({
   onClickReturnButton,
   isSticky,
   WhiteLabeling,
+  rightSideItems,
   ...props
-}: PropTypes): ReactNode {
+}: PropType): ReactNode {
   const { t } = useTranslation('Header');
 
   // TODO: this should be passed in as a prop instead and the react-router-dom
@@ -39,6 +40,7 @@ function Header({
       isSticky={isSticky}
     >
       <div className="flex justify-between flex-1">
+        {/* left side of the Header */}
         <div className="flex items-center">
           {/* // TODO: Should preserve filter/sort
               // Either injected service? Or context (like react router's `useLocation`?) */}
@@ -59,11 +61,13 @@ function Header({
             </div>
           </div>
         </div>
+
+        {/* Center of the Header */}
         <div className="flex items-center">{children}</div>
+
+        {/* Left Side of the header */}
         <div className="flex items-center">
-          {/* <span className="mr-3 text-lg text-common-light">
-            {t('INVESTIGATIONAL USE ONLY')}
-          </span> */}
+          {rightSideItems}
           <Dropdown id="options" showDropdownIcon={false} list={menuOptions}>
             <IconButton
               id={'options-settings-icon'}

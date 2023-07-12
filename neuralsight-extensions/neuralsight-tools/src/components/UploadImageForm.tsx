@@ -68,15 +68,9 @@ type Props = {
 };
 
 const UploadImageForm = ({
-  activeViewportElement,
   onClose,
-  updateViewportPreview,
-  enableViewport,
-  disableViewport,
-  loadImage,
   uploadImage,
   defaultSize,
-  canvasClass,
 }: Props): React.ReactNode => {
   const { t } = useTranslation('Modals');
 

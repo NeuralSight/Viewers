@@ -3,14 +3,15 @@ import PropTypes, { any } from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
-
 import {
   SidePanel,
   ErrorBoundary,
   UserPreferences,
-  Header,
   useModal,
   LoadingIndicatorProgress,
+  Button,
+  ButtonEnums,
+  Icon,
 } from '@ohif/ui';
 import i18n from '@ohif/i18n';
 import {
@@ -21,6 +22,7 @@ import {
   CommandsManager,
   HotkeysManager,
 } from '@ohif/core';
+import Header from '../components/Header/Header';
 import AboutModal from '../components/AboutModal';
 import NeuralSightViewportUploadModal from '../modals/NeuralSightViewportUploadModal';
 import { useAppConfig } from '@state';
@@ -260,10 +262,44 @@ function ViewerLayout({
   return (
     <div>
       <Header
+        isSticky={true}
         menuOptions={menuOptions}
         isReturnEnabled={!!appConfig.showStudyList}
         onClickReturnButton={onClickReturnButton}
         WhiteLabeling={appConfig.whiteLabeling}
+        rightSideItems={
+          <>
+            <Button
+              type={ButtonEnums.type.primary}
+              size={ButtonEnums.size.medium}
+              className="mr-3 px-2"
+              onClick={() => {
+                show({
+                  content: NeuralSightViewportUploadModal,
+                  title: t('Upload Image for AI probing'),
+                  contentProps: {
+                    activeViewportIndex,
+                    onClose: uiModalService.hide,
+                    cornerstoneViewportService,
+                  },
+                });
+              }}
+            >
+              <span className="mr-1">AI Predict</span>
+              <Icon name="tool-ai-probe" className="h-5 w-5" />
+            </Button>
+            {/*TODO: Move logout functionality to be added*/}
+            <Button
+              type={ButtonEnums.type.secondary}
+              size={ButtonEnums.size.medium}
+              className="mr-3 px-2"
+              onClick={() => console.log('this will logout the current user')}
+            >
+              <span className="mr-1">Logout</span>
+              <Icon name="power-off" className="h-5 w-5" />
+            </Button>
+          </>
+        }
       >
         <ErrorBoundary context="Primary Toolbar">
           <div className="relative flex justify-center">
